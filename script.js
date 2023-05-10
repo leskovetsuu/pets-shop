@@ -84,3 +84,59 @@ const items = [
     img: "./img/12.jpeg",
   },
 ];
+
+const itemsContainer = document.querySelector("#shop-items");
+const itemTemplate = document.querySelector("#item-template");
+const nothingFound = document.querySelector("#nothing-found");
+
+function createItem(shopItem){
+  const { title, description, tags, img, price } = shopItem;
+  const item = itemTemplate.content.cloneNode(true);
+
+  item.querySelector("h1").textContent = title;
+  item.querySelector("p").textContent = description;
+  item.querySelector("img").src = img;
+  item.querySelector(".price").textContent = `${price}P`;
+
+  const newTags = item.querySelector(".tags");
+
+  tags.forEach((tag) => {
+    const element = document.createElement("span");
+    element.textContent = tag;
+    element.classList.add("tag");
+    newTags.append(element);
+  });
+
+  return item;
+}
+
+let copyShop= [...items];
+
+function createItems(arr) {
+  
+  nothingFound.textContent = "";
+  itemsContainer.innerHTML = "";
+  arr.forEach((item) => {
+    itemsContainer.append(createItem(item));
+  });
+  if (!arr.length) {
+    nothingFound.textContent = "Ничего не найдено";
+  }
+}
+createItems(copyShop);
+
+const searchInput = document.querySelector("#search-input");
+const searchButton = document.querySelector("#search-btn");
+
+function findCosts() {
+  const searchShop = searchInput.value.trim().toLowerCase();
+
+  copyShop = items.filter((elements) =>
+  elements.title.toLocaleLowerCase().includes(searchShop)
+  );
+  createItems(copyShop);
+
+}
+
+searchButton.addEventListener('click', findCosts);
+searchInput.addEventListener('search', findCosts);
